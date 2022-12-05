@@ -9,7 +9,7 @@ class App extends Component {
 
     this.state = {
       monsters: [],
-      searchInput: "",
+      searchInput: '',
     };
   }
 
@@ -28,17 +28,22 @@ class App extends Component {
       );
   }
 
-  setSearchInput(inputValue) {
+  setSearchInput = (event) => {
     this.setState({
-      searchInput: inputValue,
+      searchInput: event.target.value,
     });
   }
 
-  isNameMatch(monster) {
-    const searchValue = this.state.searchInput;
-    return monster.name.match(
-      new RegExp(`(^${searchValue}| ${searchValue})`, "i")
-    );
+  monstersList = () => {
+    const { monsters, searchInput } = this.state;
+
+    if (!searchInput) return monsters;
+
+    return monsters.filter((monster) => {
+      return monster.name?.match(
+        new RegExp(`(^${searchInput}| ${searchInput})`, "i")
+      );
+    })
   }
 
   render() {
@@ -48,11 +53,10 @@ class App extends Component {
           className="search-box"
           type="search"
           placeholder="Search monsters"
-          onChange={(event) => this.setSearchInput(event.target.value)}
+          onChange={this.setSearchInput}
         />
 
-        {this.state.monsters
-          .filter((monster) => this.isNameMatch(monster))
+        {this.monstersList()
           .map((monster) => (
             <div key={monster.id}>
               <h1>{monster.name}</h1>
